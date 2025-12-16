@@ -29,5 +29,5 @@ COPY --from=build /app/dist ./
 COPY package*.json ./
 RUN npm ci --only=production
 EXPOSE 5173
-CMD ["npm", "start"]
+CMD ["npm", "run", "start"]
 
