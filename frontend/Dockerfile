@@ -24,10 +24,9 @@ COPY . .
 RUN npm run build
 
 # run stage
-FROM node:20-alpine
-WORKDIR /app
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
 COPY --from=build /app/dist ./
-COPY package*.json ./
-RUN npm ci --only=production
-EXPOSE 5173
-CMD ["npx", "vite", "server", "--host", "--port", "5173"]
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
