@@ -22,7 +22,7 @@ async function bootstrap() {
   );
   // cors con origenes permitidos separados por coma en ALLOWED_ORIGINS
   // por defecto restringe a frontend local
-  const originsRaw = process.env.ALLOWED_ORIGINS ?? 'http://localhost:5173';
+  const originsRaw = process.env.ALLOWED_ORIGINS ;
   const origins = originsRaw
     .split(',')
     .map((s) => s.trim())
