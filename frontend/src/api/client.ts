@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE || '/api'
+const API_BASE =  import.meta.env.VITE_API_BASE
 
 export async function api<T = unknown>(path: string, init?: RequestInit): Promise<T> {
 
