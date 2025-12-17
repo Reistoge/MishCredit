@@ -27,7 +27,7 @@ async function bootstrap() {
     .split(',')
     .map((s) => s.trim())
     .filter(Boolean);
-  app.enableCors({ origin: "*", credentials: true });
+  app.enableCors({ origin: origins, credentials: true });
   app.use(helmet());
   app.use(json({ limit: process.env.BODY_LIMIT || '1mb' }));
   app.use(
