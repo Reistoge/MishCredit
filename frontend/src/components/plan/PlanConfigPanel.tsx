@@ -61,10 +61,10 @@ export function PlanConfigPanel({
   }
 
   return (
-    <section className={`grid gap-3 ${showSidebar ? 'grid-cols-5' : 'grid-cols-4'}`}>
+    <section className={`grid gap-3 ${showSidebar ? 'grid-cols-3 lg:grid-cols-4 xl:grid-cols-5' : 'grid-cols-3 xl:grid-cols-4'}`}>
       {/* area de parámetros */}
-      <div className="col-span-4">
-        <div className="grid gap-3 grid-cols-2">
+      <div className="col-span-3 xl:col-span-4">
+        <div className="grid gap-3 col-span-1 xl:grid-cols-2">
           <div className="grid gap-3 grid-cols-8">
             {/* Tope de créditos */}
             <Card className="grid p-4 col-span-3">
@@ -166,7 +166,7 @@ export function PlanConfigPanel({
           </div>
 
           {/* Prioritarios personalizados */}
-          <Card className="grid p-4 col-span-2">
+          <Card className="grid p-4 col-span-1 xl:col-span-2">
             <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
               Prioritarios personalizados
             </div>
@@ -199,7 +199,7 @@ export function PlanConfigPanel({
 
       {/* Sidebar de etiquetas */}
       {showSidebar && (
-        <aside className="col-span-1">
+        <aside className="col-span-3 lg:col-span-1">
           <Card className="h-full sticky top-6 p-3">
             <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
               Ordenar prioridades
