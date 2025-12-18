@@ -20,6 +20,7 @@ export function SortableItem({ id, children, label, className = '' }: SortableIt
   const style: React.CSSProperties = {
     transform: CSS.Transform.toString(transform),
     transition,
+    touchAction: 'none', // Prevents scrolling on mobile when dragging
   };
 
   // default inner UI for a priority tag (grip + label)

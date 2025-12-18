@@ -12,7 +12,7 @@ import { Input } from '../components/ui/Input'
 import { EmptyState } from '../components/ui/EmptyState'
 import { LoadingState } from '../components/ui/LoadingState'
 import { SortableItem } from '../components/ui/SortableItem'
-import { closestCenter, DndContext } from '@dnd-kit/core'
+import { closestCenter, DndContext, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core'
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers'
 import { arrayMove, SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
 import { PlanConfigPanel } from '../components/plan/PlanConfigPanel'
@@ -852,6 +852,15 @@ export default function Plan() {
                     Elige el orden de las prioridades seleccionadas.
                   </div>
                   <DndContext
+                    sensors={useSensors(
+                      useSensor(MouseSensor),
+                      useSensor(TouchSensor, {
+                        activationConstraint: {
+                          delay: 100,
+                          tolerance: 5,
+                        },
+                      })
+                    )}
                     collisionDetection={closestCenter}
                     onDragEnd={handleDragEnd}
                     modifiers={[restrictToVerticalAxis]}
