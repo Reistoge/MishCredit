@@ -2,7 +2,7 @@ const API_BASE = import.meta.env.VITE_API_BASE || '/api'
 
 export async function api<T = unknown>(path: string, init?: RequestInit): Promise<T> {
 
-  console.log(`API_BASE: ${API_BASE}, env:${import.meta.env.VITE_API_BASE}`)
+  // console.log(`API_BASE: ${API_BASE}, env:${import.meta.env.VITE_API_BASE}`)
   const res = await fetch(API_BASE + path, {
     headers: { 'Content-Type': 'application/json', ...(init?.headers || {}) },
     ...init,
