@@ -11,13 +11,13 @@ const demoUsers: User[] = [
     {
         rut: '333333333',
         email: 'juan@example.com',
-        password: '1234',
+        password: '123456',
         carreras: [{ codigo: '8606', nombre: 'ICCI', catalogo: '201610' }],
     },
     {
         rut: '222222222',
         email: 'maria@example.com',
-        password: 'abcd',
+        password: 'abcdef',
         carreras: [{ codigo: '8266', nombre: 'ITI', catalogo: '202410' }],
     },
     {
@@ -63,9 +63,6 @@ export class AuthService {
             if (!user) throw new BadRequestException('rut o email no coinciden');
             return { ok: true, message: 'se envio un correo temporal' };
         }
-
-
-
     }
 
     async login(email: string, password: string): Promise<LoginResponse> {

@@ -15,6 +15,7 @@ export class GenerarProyeccionDto {
   @IsString() @IsNotEmpty() catalogo!: string;
   @Type(() => Number) @IsNumber() @Min(1) topeCreditos!: number;
   @IsOptional() @Type(() => String) prioritarios?: string[];
+  @IsOptional() @Type(() => Object) creditRange?: { min: number; max: number };
   @IsBoolean() maximizarCreditos?: boolean;
   @IsBoolean() priorizarReprobados?: boolean;
   // Transform ordenPrioridades into array of strings

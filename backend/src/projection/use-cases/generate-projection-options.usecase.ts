@@ -71,6 +71,7 @@ export class GenerateProjectionOptionsUseCase {
     catalogo: string;
     topeCreditos: number;
     prioritarios?: string[];
+    creditRange?: { min: number; max: number };
     maximizarCreditos?: boolean;
     priorizarReprobados?: boolean;
     ordenPrioridades: string[];
@@ -109,6 +110,7 @@ export class GenerateProjectionOptionsUseCase {
       avance,
       topeCreditos: params.topeCreditos,
       prioritarios: params.prioritarios ?? [],
+      creditRange: params.creditRange ?? { min: 0, max: 10 },
       maximizarCreditos: params.maximizarCreditos ?? false,
       priorizarReprobados: params.priorizarReprobados ?? false,
       ordenPrioridades: params.ordenPrioridades ?? ['NIVEL MAS BAJO'],

@@ -6,6 +6,7 @@ export interface ProjectionInput {
   avance: AvanceItem[];
   topeCreditos: number;
   prioritarios: string[]; // codigos de cursos a priorizar si cumplen reglas
+  creditRange: { min: number; max: number }; // credit range filter
   maximizarCreditos: boolean; // flag to maximize credits usage
   priorizarReprobados: boolean; // flag to prioritize failed courses
   ordenPrioridades: string[]; // ordered list of priority tags
@@ -26,6 +27,7 @@ export interface ProjectionResult {
   reglas: {
     topeCreditos: number;
     // verificaPrereq: true;
+    creditRange: { min: number; max: number };
     priorizarReprobados: boolean;
     maximizarCreditos: boolean;
     prioritarios?: string[];

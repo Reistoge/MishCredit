@@ -36,6 +36,7 @@ type ProjectionResult = {
   reglas: {
     topeCreditos: number;
     // verificaPrereq: true;
+    creditRange: { min: number; max: number };
     priorizarReprobados: boolean;
     maximizarCreditos: boolean;
     prioritarios?: string[];
@@ -162,6 +163,7 @@ export default function Plan() {
       totalCreditos: 6,
       reglas: {
         topeCreditos: 6,
+        creditRange: { min: 0, max: 8 },
         priorizarReprobados: false,
         maximizarCreditos: false,
         prioritarios: [],
@@ -176,6 +178,7 @@ export default function Plan() {
         totalCreditos: 6,
         reglas: {
           topeCreditos: 6,
+          creditRange: { min: 0, max: 8 },
           priorizarReprobados: false,
           maximizarCreditos: false,
           prioritarios: [],
@@ -609,6 +612,7 @@ export default function Plan() {
         catalogo: seleccion.catalogo,
         topeCreditos: tope,
         prioritarios,
+        creditRange: { min: creditRange[0], max: creditRange[1] }, // Convert array to object
         maximizarCreditos,
         priorizarReprobados,
         ordenPrioridades: ordenEtiquetas,
@@ -645,6 +649,7 @@ export default function Plan() {
           catalogo: seleccion.catalogo,
           topeCreditos: activeVariant.reglas.topeCreditos,
           prioritarios: activeVariant.reglas.prioritarios || [],
+          creditRange: activeVariant.reglas.creditRange || { min: 0, max: 8 },
           maximizarCreditos: activeVariant.reglas.maximizarCreditos,
           priorizarReprobados: activeVariant.reglas.priorizarReprobados,
           ordenPrioridades: activeVariant.reglas.ordenPrioridades,
@@ -722,25 +727,34 @@ export default function Plan() {
                 </Card>
 
                 {/* Rango Creditor por Ramo */}
-                <Card className="grid p-4 col-span-5">
+                <Card className="group grid p-4 col-span-5">
                   <div className="items-start">
                     <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
                       Creditos por Ramo
                     </div>
-                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 mt-1
+                    opacity-100 group-hover:opacity-0 transition-opacity">
                       Limita el rango de creditos por ramo.
                     </div>
 
-                    <RangeSlider
-                      id='range-slider-credits'
-                      className="mt-4"
-                      min={0}
-                      max={8}
-                      step={1}
-                      onInput={setCreditRange}
-                      defaultValue={creditRange}
-                    />
-                    
+                    <div className="relative mt-4">
+                      <RangeSlider
+                        id='range-slider-credits'
+                        // className="mt-4"
+                        min={0}
+                        max={8}
+                        step={1}
+                        onInput={setCreditRange}
+                        defaultValue={creditRange}
+                      />
+                      {/* Display the current values only when hovering */}
+                      <div className="absolute bottom-5 left-0 right-0 flex justify-between text-xs font-semibold text-teal-700 mt-3.5 mx-0.5
+                      opacity-0 group-hover:opacity-100 transition-opacity">
+                        <span>{creditRange[0]} SCT</span>
+                        <span>{creditRange[1]} SCT</span>
+                      </div>
+
+                    </div>
                   </div>
                 </Card>
 

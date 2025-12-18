@@ -46,7 +46,7 @@ export function PlanConfigPanel({
   const safeBase = Array.isArray(etiquetasBase) ? etiquetasBase : [];
   const safeExtras = Array.isArray(etiquetasExtras) ? etiquetasExtras : [];
   const etiquetasVisibles = [...safeExtras, ...safeBase];
-  const showSidebar = etiquetasVisibles.length > 0;
+  const showSidebar = etiquetasExtras.length > 0;
 
   function handleDragEnd(event: any) {
     const { active, over } = event;
@@ -87,24 +87,34 @@ export function PlanConfigPanel({
             </Card>
 
             {/* Rango créditos por ramo */}
-            <Card className="grid p-4 col-span-5">
+            <Card className="group grid p-4 col-span-5">
               <div className="items-start">
                 <div className="text-xs uppercase tracking-wide text-slate-500 dark:text-slate-400">
-                  Créditos por ramo
+                  Creditos por Ramo
                 </div>
-                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  Limita el rango de créditos por ramo.
+                <div className="text-xs text-slate-500 dark:text-slate-400 mt-1
+                opacity-100 group-hover:opacity-0 transition-opacity">
+                  Limita el rango de creditos por ramo.
                 </div>
 
-                <RangeSlider
-                  id="range-slider-credits"
-                  className="mt-4"
-                  min={0}
-                  max={8}
-                  step={1}
-                  onInput={(value) => onCreditRangeChange(value as [number, number])}
-                  defaultValue={creditRange}
-                />
+                <div className="relative mt-4">
+                  <RangeSlider
+                    id='range-slider-credits'
+                    // className="mt-4"
+                    min={0}
+                    max={8}
+                    step={1}
+                    onInput={(value) => onCreditRangeChange(value as [number, number])}
+                    defaultValue={creditRange}
+                  />
+                  {/* Display the current values only when hovering */}
+                  <div className="absolute bottom-5 left-0 right-0 flex justify-between text-xs font-semibold text-teal-700 mt-3.5 mx-0.5
+                  opacity-0 group-hover:opacity-100 transition-opacity">
+                    <span>{creditRange[0]} SCT</span>
+                    <span>{creditRange[1]} SCT</span>
+                  </div>
+
+                </div>
               </div>
             </Card>
           </div>

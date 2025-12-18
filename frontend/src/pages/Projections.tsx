@@ -406,16 +406,18 @@ export default function Projections() {
                   </ul>
                 )}
 
-                <div className="flex flex-wrap items-center justify-between gap-2 pt-2">
-                  <Button
-                    variant="primary"
-                    size="sm"
-                    onClick={() => void marcarFavorita(proj._id)}
-                    isLoading={favoriteLoading === proj._id}
-                  >
-                    Marcar favorita
-                  </Button>
-                  <Button variant="ghost" size="sm" onClick={() => eliminar(proj._id)}>
+                <div className="flex flex-wrap items-center gap-2 pt-2">
+                  {!proj.isFavorite && (
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={() => void marcarFavorita(proj._id)}
+                      isLoading={favoriteLoading === proj._id}
+                    >
+                      Marcar favorita
+                    </Button>
+                  )}
+                  <Button variant="ghost" size="sm" onClick={() => eliminar(proj._id)} className="ml-auto">
                     Eliminar
                   </Button>
                 </div>

@@ -11,12 +11,12 @@ export default function AdminAccess() {
   const nav = useNavigate();
 
   function save() {
-    if (!adminKey.trim()) {
-      toast({ type: 'error', message: 'Debes ingresar una clave valida' });
-      return;
-    }
+    // if (!adminKey.trim()) {
+    //   toast({ type: 'error', message: 'Debes ingresar una clave valida' });
+    //   return;
+    // }
     toast({ type: 'success', message: 'Clave guardada' });
-    nav('/oferta');
+    nav('/Avance');
   }
 
   function clear() {

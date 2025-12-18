@@ -7,6 +7,7 @@ import { Alert } from '../components/ui/Alert';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent, CardHeader } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
+import AccessibilityToggles from '../layouts/AccessibilityToggles';
 
 type Carrera = { codigo: string; nombre: string; catalogo: string };
 
@@ -46,7 +47,7 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-900 to-teal-700 px-6 py-12 text-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-teal-900 to-teal-600 px-6 py-12 text-slate-100">
       <main className="mx-auto flex max-w-2xl flex-col gap-6">
         <div className="text-center">
           <h1 className="text-3xl font-extrabold">Bienvenido a Planificador UCN Optimish</h1>
@@ -55,7 +56,7 @@ export default function Login() {
           </p>
         </div>
 
-        <Card className="border-white/10 bg-white/10 backdrop-blur">
+        <Card className="border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <CardHeader
             title="Inicio de sesion"
             description="Tus datos permanecen en tu navegador. Para pruebas puedes usar las credenciales demo."
@@ -96,9 +97,9 @@ export default function Login() {
           </CardContent>
         </Card>
 
-        <Card className="border-white/10 bg-white/5 backdrop-blur">
+        <Card className="border border-slate-200 bg-white shadow-sm dark:border-slate-700 dark:bg-slate-800">
           <CardHeader title="Acceso administrador" description="Carga de oferta, respaldos y configuraciones avanzadas." />
-          <CardContent className="flex flex-col gap-3 text-sm text-slate-200/90">
+          <CardContent className="flex flex-col gap-3 text-sm text-slate-700 dark:text-slate-200">
             <p>Debes ingresar la clave de administrador para acceder a herramientas avanzadas.</p>
             <Button variant="secondary" onClick={() => navigate('/admin')} className="self-center">
               Ir a administrador
@@ -110,6 +111,7 @@ export default function Login() {
           © 2025 Optimish — Proyecto academico UCN
         </footer>
       </main>
+      <AccessibilityToggles />
     </div>
   );
 }

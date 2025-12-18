@@ -5,46 +5,12 @@ import { ProjectionInput, ProjectionResult, ProjectionCourse } from '../entities
 export class ProjectionService {
   
   static build(input: ProjectionInput): ProjectionResult {
-    const { malla, avance, topeCreditos, ordenPrioridades, prioritarios, priorizarReprobados, maximizarCreditos } = input;
+    const { malla, avance, topeCreditos, creditRange, ordenPrioridades, prioritarios, priorizarReprobados, maximizarCreditos } = input;
 
     const tope = Number.isFinite(topeCreditos) && topeCreditos! > 0 ? topeCreditos! : 22;
 
     // --- Build sets for statuses ---
-    const aprobados = new Set<string>(
-      avance.filter((a) => a.status === 'APROBADO').map((a) => a.course),
-    );
-    const reprobados = new Set<string>(
-      avance.filter((a) => a.status === 'REPROBADO').map((a) => a.course),
-    );
-    const prios = new Set<string>(
-      (prioritarios || []).map((s) => (s || '').trim()).filter(Boolean),
-    );
-
-    // --- Get pending courses (not approved yet) ---
-    const pendientes = malla.filter((c) => !aprobados.has(c.codigo));
-
-    // --- Keep only courses that can be taken (passed prereqs or reprobado) ---
-    const disponibles = pendientes.filter(
-      (c) => reprobados.has(c.codigo) || ProjectionService.hasPrereqs(c, aprobados),
-    );
-
-    // --- Compute fields for ordering ---
-    const cursos: (ProjectionCourse & {
-      _isReprob: boolean;
-      _isPrio: boolean;
-    })[] = disponibles.map((c) => ({
-      codigo: c.codigo,
-      asignatura: c.asignatura,
-      creditos: c.creditos,
-      nivel: c.nivel,
-      motivo: reprobados.has(c.codigo) ? 'REPROBADO' : 'PENDIENTE',
-      _isReprob: reprobados.has(c.codigo),
-      _isPrio: prios.has(c.codigo),
-    }));
-
-    // --- Sort dynamically using ordenPrioridades ---
-    const order = ordenPrioridades || [];
-    cursos.sort((a, b) => ProjectionService.compareByTags(a, b, order));
+    const { cursos, order } = ProjectionService.prepareCourses(input);
 
     // --- Select courses ---
     let seleccion: ProjectionCourse[] = [];
@@ -62,6 +28,7 @@ export class ProjectionService {
       reglas: {
         topeCreditos: tope,
         // verificaPrereq: true,
+        creditRange,
         priorizarReprobados,
         maximizarCreditos,
         prioritarios,
@@ -72,46 +39,12 @@ export class ProjectionService {
   
 
   static buildOptions(input: ProjectionInput, maxOptions): ProjectionResult[] {
-    const { malla, avance, topeCreditos, ordenPrioridades, prioritarios, priorizarReprobados, maximizarCreditos } = input;
+    const { malla, avance, topeCreditos, creditRange, ordenPrioridades, prioritarios, priorizarReprobados, maximizarCreditos } = input;
     
     const tope = Number.isFinite(topeCreditos) && topeCreditos! > 0 ? topeCreditos! : 22;
 
     // --- Build sets for statuses ---
-    const aprobados = new Set<string>(
-      avance.filter((a) => a.status === 'APROBADO').map((a) => a.course),
-    );
-    const reprobados = new Set<string>(
-      avance.filter((a) => a.status === 'REPROBADO').map((a) => a.course),
-    );
-    const prios = new Set<string>(
-      (prioritarios || []).map((s) => (s || '').trim()).filter(Boolean),
-    );
-
-    // --- Get pending courses (not approved yet) ---
-    const pendientes = malla.filter((c) => !aprobados.has(c.codigo));
-
-    // --- Keep only courses that can be taken (passed prereqs or reprobado) ---
-    const disponibles = pendientes.filter(
-      (c) => reprobados.has(c.codigo) || ProjectionService.hasPrereqs(c, aprobados),
-    );
-
-    // --- Compute fields for ordering ---
-    const cursos: (ProjectionCourse & {
-      _isReprob: boolean;
-      _isPrio: boolean;
-    })[] = disponibles.map((c) => ({
-      codigo: c.codigo,
-      asignatura: c.asignatura,
-      creditos: c.creditos,
-      nivel: c.nivel,
-      motivo: reprobados.has(c.codigo) ? 'REPROBADO' : 'PENDIENTE',
-      _isReprob: reprobados.has(c.codigo),
-      _isPrio: prios.has(c.codigo),
-    }));
-
-    // --- Sort dynamically using ordenPrioridades ---
-    const order = ordenPrioridades || [];
-    cursos.sort((a, b) => ProjectionService.compareByTags(a, b, order));
+    const { cursos, order } = ProjectionService.prepareCourses(input);
 
     // --- Generate multiple best projections ---
     const options: ProjectionResult[] = [];
@@ -129,6 +62,7 @@ export class ProjectionService {
           seleccion,
           totalCreditos,
           tope,
+          creditRange,
           priorizarReprobados,
           maximizarCreditos,
           prioritarios,
@@ -153,6 +87,7 @@ export class ProjectionService {
             nextSeleccion,
             nextTotal,
             tope,
+            creditRange,
             priorizarReprobados,
             maximizarCreditos,
             prioritarios,
@@ -171,6 +106,7 @@ export class ProjectionService {
           seleccion,
           totalCreditos,
           tope,
+          creditRange,
           priorizarReprobados,
           maximizarCreditos,
           prioritarios,
@@ -212,6 +148,7 @@ export class ProjectionService {
             nextSeleccion,
             total,
             tope,
+            creditRange,
             priorizarReprobados,
             maximizarCreditos,
             prioritarios,
@@ -227,6 +164,57 @@ export class ProjectionService {
     return options;
   }
 
+
+  // --- Course preparation/filtering logic ---
+  private static prepareCourses(input: ProjectionInput): {
+    cursos: (ProjectionCourse & { _isReprob: boolean; _isPrio: boolean })[];
+    order: string[];
+  } {
+    const { malla, avance, ordenPrioridades, prioritarios, creditRange } = input;
+
+    // --- Build sets for statuses ---
+    const aprobados = new Set<string>(
+      avance.filter((a) => a.status === 'APROBADO').map((a) => a.course),
+    );
+    const reprobados = new Set<string>(
+      avance.filter((a) => a.status === 'REPROBADO').map((a) => a.course),
+    );
+    const prios = new Set<string>(
+      (prioritarios || []).map((s) => (s || '').trim()).filter(Boolean),
+    );
+
+    // --- Get pending courses (not approved yet) ---
+    const pendientes = malla.filter((c) => !aprobados.has(c.codigo));
+
+    // --- Keep only courses that can be taken (passed prereqs or reprobado) ---
+    const disponibles = pendientes.filter(
+      (c) => reprobados.has(c.codigo) || ProjectionService.hasPrereqs(c, aprobados),
+    );
+
+    // --- Filter by credit range (inclusive) ---
+    const enRango = disponibles.filter(
+      (c) => c.creditos >= creditRange.min && c.creditos <= creditRange.max,
+    );
+
+    // --- Compute fields for ordering ---
+    const cursos: (ProjectionCourse & {
+      _isReprob: boolean;
+      _isPrio: boolean;
+    })[] = enRango.map((c) => ({
+      codigo: c.codigo,
+      asignatura: c.asignatura,
+      creditos: c.creditos,
+      nivel: c.nivel,
+      motivo: reprobados.has(c.codigo) ? 'REPROBADO' : 'PENDIENTE',
+      _isReprob: reprobados.has(c.codigo),
+      _isPrio: prios.has(c.codigo),
+    }));
+    // --- Sort dynamically using ordenPrioridades ---
+    const order = ordenPrioridades || [];
+    cursos.sort((a, b) => ProjectionService.compareByTags(a, b, order));
+
+    return { cursos, order };
+  }
 
   // --- Pick courses until credit limit ---
   private static pickCoursesUntilCap(
@@ -391,6 +379,7 @@ export class ProjectionService {
     seleccion: ProjectionCourse[],
     totalCreditos: number,
     tope: number,
+    creditRange: { min: number; max: number },
     priorizarReprobados: boolean,
     maximizarCreditos: boolean,
     prioritarios: string[] | undefined,
@@ -401,6 +390,7 @@ export class ProjectionService {
       totalCreditos,
       reglas: {
         topeCreditos: tope,
+        creditRange,
         priorizarReprobados,
         maximizarCreditos,
         prioritarios,

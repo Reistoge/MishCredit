@@ -8,3 +8,53 @@ body { @apply bg-slate-100 text-slate-900 antialiased font-body; }
 .thin-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
 .thin-scroll::-webkit-scrollbar-thumb { background-color: rgba(148, 163, 184, 0.6); border-radius: 9999px; }
 .thin-scroll::-webkit-scrollbar-track { background-color: transparent; }
+
+/* Dyslexia-friendly mode */
+:root {
+  --spacing-y: 1;
+}
+
+.dyslexia-friendly {
+  --spacing-y: 1.5;
+  font-family: 'Lexend', system-ui, -apple-system, sans-serif !important;
+  letter-spacing: 0.02em;
+}
+
+.dyslexia-friendly *,
+.dyslexia-friendly h1,
+.dyslexia-friendly h2,
+.dyslexia-friendly h3,
+.dyslexia-friendly h4,
+.dyslexia-friendly h5,
+.dyslexia-friendly h6,
+.dyslexia-friendly p,
+.dyslexia-friendly li,
+.dyslexia-friendly label,
+.dyslexia-friendly button,
+.dyslexia-friendly input,
+.dyslexia-friendly select,
+.dyslexia-friendly span,
+.dyslexia-friendly div {
+  font-family: 'Lexend', system-ui, -apple-system, sans-serif !important;
+  line-height: 1.8 !important;
+}
+
+.dyslexia-friendly h1,
+.dyslexia-friendly h2,
+.dyslexia-friendly h3,
+.dyslexia-friendly h4,
+.dyslexia-friendly h5,
+.dyslexia-friendly h6 {
+  margin-top: calc(1.5 * var(--spacing-y)) !important;
+  margin-bottom: calc(0.75 * var(--spacing-y)) !important;
+  padding-top: calc(0.375 * var(--spacing-y)) !important;
+  padding-bottom: calc(0.375 * var(--spacing-y)) !important;
+}
+
+.dyslexia-friendly p,
+.dyslexia-friendly li {
+  margin-top: calc(0.75 * var(--spacing-y)) !important;
+  margin-bottom: calc(0.75 * var(--spacing-y)) !important;
+  padding-top: calc(0.25 * var(--spacing-y)) !important;
+  padding-bottom: calc(0.25 * var(--spacing-y)) !important;
+}
