@@ -221,7 +221,7 @@ export default function DashboardLayout() {
       <div className="md:ml-72 min-h-screen ">
         <header className="flex h-16 items-center gap-3 border-b border-slate-200 bg-white md:px-4 shadow-sm transition-colors dark:border-slate-800 dark:bg-slate-800">
           <div className="flex ">
-            <div className="px-2 mt-4">
+            <div className="px-2 pr-4 mt-4">
               {/* Toogle Mobile Menu */}
               {menuToggleButton(FiList)}
             </div>
