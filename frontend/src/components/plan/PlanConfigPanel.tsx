@@ -1,7 +1,7 @@
 import RangeSlider from 'react-range-slider-input';
 import { Card } from '../ui/Card';
 import { Button } from '../ui/Button';
-import { DndContext, closestCenter } from '@dnd-kit/core';
+import { DndContext, closestCenter, TouchSensor, MouseSensor, useSensor, useSensors } from '@dnd-kit/core';
 import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
 import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
 import { SortableItem } from '../ui/SortableItem';
@@ -208,6 +208,15 @@ export function PlanConfigPanel({
               Elige el orden de las prioridades seleccionadas.
             </div>
             <DndContext
+              sensors={useSensors(
+                useSensor(MouseSensor),
+                useSensor(TouchSensor, {
+                  activationConstraint: {
+                    delay: 50,
+                    tolerance: 5,
+                  },
+                })
+              )}
               collisionDetection={closestCenter}
               onDragEnd={handleDragEnd}
               modifiers={[restrictToVerticalAxis]}
